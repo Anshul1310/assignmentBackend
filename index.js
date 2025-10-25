@@ -17,7 +17,7 @@ app.get("/api/events",async (req,res)=>{
     const distance=req.body.distance;
     const latitude=req.body.latitude;
     const longitude=req.body.longitude;
-    
+    console.log(distance,latitude,longitude)
     const nearbyEvents = await findEventsNearby(latitude, longitude, Number(distance)); // 5km radius
     res.status(200).json(nearbyEvents);
 })
