@@ -1,0 +1,73 @@
+const express=require("express");
+const app=express();
+const mongoose=require("mongoose");
+const Event=require("./models/Event");
+
+app.use(express.json());
+
+mongoose.connect("mongodb+srv://anshul:anshul@indulge.jhz3dxr.mongodb.net/",{
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+}).then((data)=>{
+	console.log("dsd")
+});
+
+app.get("/events/get",async (req,res)=>{
+    const distance=req.body.distance;
+    const latitude=req.body.latitude;
+    const longitude=req.body.longitude;
+    
+    const nearbyEvents = await findEventsNearby(latitude, longitude, Number(distance)); // 5km radius
+    res.status(200).json(nearbyEvents);
+})
+
+
+app.get("/hello",(req,res)=>{
+  res.status(200).json("success");
+})
+
+// POST endpoint to create an event
+app.post('/api/events', async (req, res) => {
+  try {
+    const { name, description, longitude, latitude, address, date } = req.body;
+    
+    const event = new Event({
+      name,
+      description,
+      location: {
+        type: 'Point',
+        coordinates: [parseFloat(longitude), parseFloat(latitude)]
+      },
+      address,
+      date
+    });
+    
+    await event.save();
+    res.status(201).json({ success: true, event });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+
+async function findEventsNearby(longitude, latitude, radiusInKm) {
+  const radiusInMeters = radiusInKm * 1000;
+  
+  const events = await Event.find({
+    location: {
+      $near: {
+        $geometry: {
+          type: 'Point',
+          coordinates: [longitude, latitude]
+        },
+        $maxDistance: radiusInMeters // in meters
+      }
+    }
+  });
+  
+  return events;
+}
+
+
+app.listen(3000);
