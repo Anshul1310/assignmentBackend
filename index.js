@@ -23,10 +23,10 @@ mongoose.connect("mongodb+srv://anshul:anshul@indulge.jhz3dxr.mongodb.net/",{
 });
 
 app.get("/api/events",async (req,res)=>{
-   console.log(req.params)
-    const distance=req.params.distance;
-    const latitude=req.params.latitude;
-    const longitude=req.params.longitude;
+   console.log(req.query)
+    const distance=req.query.distance;
+    const latitude=req.query.latitude;
+    const longitude=req.query.longitude;
    
     const nearbyEvents = await findEventsNearby(latitude, longitude, Number(distance)); // 5km radius
     res.status(200).json(nearbyEvents);
