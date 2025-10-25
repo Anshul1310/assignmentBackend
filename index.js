@@ -73,7 +73,7 @@ async function findEventsNearby(longitude, latitude, radiusInKm) {
         return item;
     }
   })
-  return allDocs;
+  return doc;
 
   // const radiusInMeters = radiusInKm * 1000;
   
