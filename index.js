@@ -12,7 +12,7 @@ mongoose.connect("mongodb+srv://anshul:anshul@indulge.jhz3dxr.mongodb.net/",{
 	console.log("dsd")
 });
 
-app.get("/events/get",async (req,res)=>{
+app.get("/api/events",async (req,res)=>{
     const distance=req.body.distance;
     const latitude=req.body.latitude;
     const longitude=req.body.longitude;
