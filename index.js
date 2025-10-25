@@ -65,6 +65,16 @@ app.post('/api/events', async (req, res) => {
 
 
 async function findEventsNearby(longitude, latitude, radiusInKm) {
+
+  const allDocs = await Event.find({}).toArray();
+  const doc=allDocs.map((item)=>{
+    let distance=getDistanceFromLatLonInKm(latitude,longitude,item.location.coordinates[1],item.location.coordinates[0]);
+    if(distance<radiusInKm){
+        return item;
+    }
+  })
+  return allDocs;
+
   // const radiusInMeters = radiusInKm * 1000;
   
   // const events = await Event.find({
@@ -79,17 +89,42 @@ async function findEventsNearby(longitude, latitude, radiusInKm) {
   //   }
   // });
 
-  let pipeline=[];
-  pipeline.push({
-    $geoNear:{
-      near:{type:"Point", coordinates:[longitude, latitude]},
-      distanceField:"distance",
-      maxDistance:radiusInKm*1000,
-      spherical:true
-    }
-  })
-  let placeData=await Event.aggregate(pipeline);
-  res.status(200).json(placeData)
+  // let pipeline=[];
+  // pipeline.push({
+  //   $geoNear:{
+  //     near:{type:"Point", coordinates:[longitude, latitude]},
+  //     distanceField:"distance",
+  //     maxDistance:radiusInKm*1000,
+  //     spherical:true
+  //   }
+  // })
+  // let placeData=await Event.aggregate(pipeline);
+  // res.status(200).json(placeData)
+}
+
+
+function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+  const R = 6371; // Radius of the Earth in kilometers
+  const dLat = deg2rad(lat2 - lat1);
+  const dLon = deg2rad(lon2 - lon1);
+
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distance = R * c; // Distance in km
+  return distance;
+}
+
+/**
+ * Converts degrees to radians.
+ * @param {number} deg Angle in degrees.
+ * @returns {number} Angle in radians.
+ */
+function deg2rad(deg) {
+  return deg * (Math.PI / 180);
 }
 
 
