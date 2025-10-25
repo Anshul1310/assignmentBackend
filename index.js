@@ -66,7 +66,7 @@ app.post('/api/events', async (req, res) => {
 
 async function findEventsNearby(longitude, latitude, radiusInKm) {
 
-  const allDocs = await Event.find({}).toArray();
+  const allDocs = await Event.find({});
   const doc=allDocs.map((item)=>{
     let distance=getDistanceFromLatLonInKm(latitude,longitude,item.location.coordinates[1],item.location.coordinates[0]);
     if(distance<radiusInKm){
