@@ -29,7 +29,7 @@ app.get("/hello",(req,res)=>{
 // POST endpoint to create an event
 app.post('/api/events', async (req, res) => {
   try {
-    const { name, description, longitude, latitude, address, date } = req.body;
+    const { name, description, longitude, latitude, image,address, date } = req.body;
     
     const event = new Event({
       name,
@@ -39,6 +39,7 @@ app.post('/api/events', async (req, res) => {
         coordinates: [parseFloat(longitude), parseFloat(latitude)]
       },
       address,
+      image,
       date
     });
     
