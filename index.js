@@ -66,29 +66,32 @@ app.post('/api/events', async (req, res) => {
 
 async function findEventsNearby(longitude, latitude, radiusInKm) {
 
-  const allDocs = await Event.find({});
-  const doc=allDocs.map((item)=>{
-    let distance=getDistanceFromLatLonInKm(latitude,longitude,item.location.coordinates[1],item.location.coordinates[0]);
-    console.log(distance);
-    if(distance<radiusInKm){
-        return item;
-    }
-  })
-  return doc;
-
-  // const radiusInMeters = radiusInKm * 1000;
-  
-  // const events = await Event.find({
-  //   location: {
-  //     $near: {
-  //       $geometry: {
-  //         type: 'Point',
-  //         coordinates: [longitude, latitude]
-  //       },
-  //       $maxDistance: radiusInMeters // in meters
-  //     }
+  // const allDocs = await Event.find({});
+  // const doc=allDocs.map((item)=>{
+  //   let distance=getDistanceFromLatLonInKm(latitude,longitude,item.location.coordinates[1],item.location.coordinates[0]);
+  //   console.log(distance);
+  //   if(distance<radiusInKm){
+  //       return item;
   //   }
-  // });
+  // })
+  // return doc;
+
+  const radiusInMeters = radiusInKm * 1000;
+  
+  const events = await Event.find({
+    location: {
+      $near: {
+        $geometry: {
+          type: 'Point',
+          coordinates: [longitude, latitude]
+        },
+        $maxDistance: radiusInMeters // in meters
+      }
+    }
+  });
+  return events;
+
+
 
   // let pipeline=[];
   // pipeline.push({
