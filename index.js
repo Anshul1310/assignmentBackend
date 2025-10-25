@@ -28,7 +28,7 @@ app.get("/api/events",async (req,res)=>{
     const latitude=req.query.latitude;
     const longitude=req.query.longitude;
    
-    const nearbyEvents = await findEventsNearby(latitude, longitude, Number(distance)); // 5km radius
+    const nearbyEvents = await findEventsNearby(longitude,  latitude,Number(distance)); // 5km radius
     res.status(200).json(nearbyEvents);
 })
 
@@ -69,9 +69,12 @@ async function findEventsNearby(longitude, latitude, radiusInKm) {
   
   const events = await Event.find({
     location: {
-      $geoWithin: {
-        $centerSphere: [latitude, longitude,radiusInKm/6400]
-        
+      $near: {
+        $geometry: {
+          type: 'Point',
+          coordinates: [longitude, latitude]
+        },
+        $maxDistance: radiusInMeters // in meters
       }
     }
   });
