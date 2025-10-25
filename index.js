@@ -28,7 +28,7 @@ app.get("/api/events",async (req,res)=>{
     const latitude=req.query.latitude;
     const longitude=req.query.longitude;
    
-    const nearbyEvents = await findEventsNearby(longitude,  latitude,Number(distance)); // 5km radius
+    const nearbyEvents = await findEventsNearby(longitude, latitude,Number(distance)); // 5km radius
     res.status(200).json(nearbyEvents);
 })
 
@@ -65,21 +65,31 @@ app.post('/api/events', async (req, res) => {
 
 
 async function findEventsNearby(longitude, latitude, radiusInKm) {
-  const radiusInMeters = radiusInKm * 1000;
+  // const radiusInMeters = radiusInKm * 1000;
   
-  const events = await Event.find({
-    location: {
-      $near: {
-        $geometry: {
-          type: 'Point',
-          coordinates: [longitude, latitude]
-        },
-        $maxDistance: radiusInMeters // in meters
-      }
+  // const events = await Event.find({
+  //   location: {
+  //     $near: {
+  //       $geometry: {
+  //         type: 'Point',
+  //         coordinates: [longitude, latitude]
+  //       },
+  //       $maxDistance: radiusInMeters // in meters
+  //     }
+  //   }
+  // });
+
+  let pipeline=[];
+  pipeline.push({
+    $geoNear:{
+      near:{type:"Point", coordinates:[longitude, latitude]},
+      distanceField:"distance",
+      maxDistance:radiusInKm*1000,
+      spherical:true
     }
-  });
-  
-  return events;
+  })
+  let placeData=await Event.aggregate(pipeline);
+  res.status(200).json(placeData)
 }
 
 
