@@ -2,7 +2,7 @@ const express=require("express");
 const cors=require("cors");
 const app=express();
 const mongoose=require("mongoose");
-const Event=require("./models/User");
+const User=require("./models/User");
 const Event=require("./models/Event");
 
 app.use(express.json());
