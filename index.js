@@ -2,6 +2,7 @@ const express=require("express");
 const cors=require("cors");
 const app=express();
 const mongoose=require("mongoose");
+const Event=require("./models/User");
 const Event=require("./models/Event");
 
 app.use(express.json());
@@ -21,6 +22,41 @@ mongoose.connect("mongodb+srv://anshul:anshul@indulge.jhz3dxr.mongodb.net/",{
 }).then((data)=>{
 	console.log("dsd")
 });
+
+const { uniqueNamesGenerator, adjectives, colors, animals } = require('unique-names-generator');
+
+
+app.post("/api/signup",async (req,res)=>{
+    const {email, password}=req.body;
+
+    const user= await User.findOne({ email })
+    if(!user){
+      const randomName = uniqueNamesGenerator({ dictionaries: [adjectives, colors, animals] }); // big_red_donkey
+
+         const createdUser = new User({
+          name:randomName, email, password
+          
+    });
+    await createdUser.save();
+    res.status(200).json("success")
+    }else{
+      res.status(200).json("User Already Exists")
+    }
+})
+
+app.post("/api/login",async (req,res)=>{
+    const {email, password}=req.body;
+
+    const user= await User.findOne({ email, password})
+    if(!user){
+      res.status(200).json("success")
+    }else{
+      res.status(200).json("Wrong Credentials")
+    }
+})
+
+
+
 
 app.get("/api/events",async (req,res)=>{
    console.log(req.query)
