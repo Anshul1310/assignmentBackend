@@ -2,17 +2,24 @@
   "name": "indulge",
   "version": "1.0.0",
   "main": "index.js",
+  "type":"commonjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "body-parser": "^2.2.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
-    "mongoose": "^8.19.2",
-    "unique-names-generator": "^4.7.1"
+    "firebase-admin": "^13.6.0",
+    "geofire-common": "^6.0.0",
+    "mongodb": "^7.0.0",
+    "mongoose": "^8.19.3",
+    "nodemon": "^3.1.10",
+    "unique-names-generator": "^4.7.1",
+    "uuid": "^13.0.0"
   }
 }
