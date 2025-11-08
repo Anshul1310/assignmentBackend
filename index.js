@@ -15,7 +15,7 @@ const DATABASE_URL = 'https://indulge-93dc5-default-rtdb.firebaseio.com';
 
 
 // --- This is the simple, correct way to import the JSON key ---
-const serviceAccount = require('./serviceAccountKey.json');
+const serviceAccount = require('./service.json');
 
 // --- Initialize Firebase Admin ---
 const app = express();
